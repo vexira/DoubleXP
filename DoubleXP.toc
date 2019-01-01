@@ -1,0 +1,8 @@
+## Interface: 30300
+## Title: DoubleXP
+## Version: 1.0
+## X-Date: 2018/12/31
+## Notes: Gives time before the next double XP Weekend, or time left before double XP Weekend ends, on the WoW-Mania Redemption realm
+## SavedVariablesPerCharacter: DXP_Visible
+
+DoubleXP.xml

@@ -1,0 +1,71 @@
+<Ui
+	xmlns="http://www.blizzard.com/wow/ui/"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+
+	<Script file="DoubleXP.lua"/>
+
+	<Frame
+		name="DoubleXPFrame"
+		parent="UIParent"
+		enableMouse="true"
+		registerForClicks="LeftButtonUp"
+		movable="true"
+		clampedToScreen="true">
+
+		<Size>
+			<AbsDimension x="140" y="70"/>
+		</Size>
+		<Anchors>
+			<Anchor
+				point="CENTER"
+				relativePoint="CENTER"
+				relativeTo="UIParent" />
+		</Anchors>
+		<Backdrop
+			bgFile="Interface/Tooltips/UI-Tooltip-Background"
+			edgeFile="Interface/Tooltips/UI-Tooltip-Border"
+			tile="true">
+			<EdgeSize>
+				<AbsValue val="16"/>
+			</EdgeSize>
+			<TileSize>
+				<AbsValue val="16"/>
+			</TileSize>
+			<BackgroundInsets>
+				<AbsInset
+					left="4"
+					right="4"
+					top="4"
+					bottom="4"/>
+			</BackgroundInsets>
+		</Backdrop>
+		<Scripts>
+			<OnLoad>
+				self:RegisterForDrag("LeftButton");
+				DoubleXP_OnLoad(self);
+			</OnLoad>
+			<OnDragStart>
+				self:StartMoving();
+			</OnDragStart>
+			<OnDragStop>
+				self:StopMovingOrSizing();
+			</OnDragStop>
+			<OnUpdate>
+				DoubleXP_OnUpdate(self);
+			</OnUpdate>
+			<OnMouseUp>
+				DoubleXP_OnClick(self);
+			</OnMouseUp>
+			<OnEnter>
+				DoubleXP_OnEnter(self);
+			</OnEnter>
+			<OnLeave>
+				DoubleXP_OnLeave();
+			</OnLeave>
+			<OnEvent>
+				DoubleXP_OnEvent(self, event, arg1);
+			</OnEvent>
+		</Scripts>
+	</Frame>
+</Ui>
