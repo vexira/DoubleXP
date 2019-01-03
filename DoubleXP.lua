@@ -185,10 +185,10 @@ function DoubleXP_TimeLeft()
 	local h,m,s;
 	local pretty;
 
-	date_limit = deepcopy(DXP_Date);
-	date_limit.hour = 23;
-	date_limit.min = 59;
-	date_limit.sec = 59;
+	date_limit = deepcopy(DXP_Date);	-- now
+	date_limit.hour = 23;			-- end ...
+	date_limit.min = 59;			-- ... of current ...
+	date_limit.sec = 59;			-- ... day
 
 	if ( DXP_ON ) then
 		if ( date_limit.wday == 1 ) then
@@ -197,7 +197,7 @@ function DoubleXP_TimeLeft()
 			time_limit = time(date_limit) + 3600*24;
 		end
 	else
-		time_limit = time(date_limit) + (7-DXP_Date.wday)*3600*24;
+		time_limit = time(date_limit) + (6-DXP_Date.wday)*3600*24;
 	end
 	time_limit = time_limit + 1; -- one more second to switch to the next day
 
