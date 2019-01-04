@@ -167,7 +167,7 @@ function DoubleXP_Report()
 		return "|cffffffffON!|r";
 	else
 		DoubleXPFrame:SetBackdropColor(0,0,0,1);
-		return "OFF";
+		return "off";
 	end
 end
 
