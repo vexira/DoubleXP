@@ -182,7 +182,7 @@ function DoubleXP_TimeLeft()
 	local date_limit;
 	local time_limit;
 	local delta_t;
-	local d,hd,h,m,s;
+	local d,h,m,s;
 	local pretty;
 
 	date_limit = deepcopy(DXP_Date);	-- now
@@ -199,42 +199,22 @@ function DoubleXP_TimeLeft()
 	else
 		time_limit = time(date_limit) + (6-DXP_Date.wday)*3600*24;
 	end
-	time_limit = time_limit + 1; -- one more second to switch to the next day
+	time_limit = time_limit + 1; -- one more second to reach the next day
 
 	delta_t = time_limit - time(DXP_Date);
 
 	d = floor(delta_t/3600/24);
-	if ( d >= 2 ) then
-		h = floor((delta_t-d*3600*24)/3600);
-		m = floor((delta_t-d*3600*24-h*3600)/60);
-		s = delta_t-d*3600*24-h*3600-m*60;
-	else
-		h = floor(delta_t/3600);
-		m = floor((delta_t-h*3600)/60);
-		s = delta_t-h*3600-m*60;
-	end
+	h = floor((delta_t-d*3600*24)/3600);
+	m = floor((delta_t-d*3600*24-h*3600)/60);
+	s = delta_t-d*3600*24-h*3600-m*60;
 
 	pretty = "";
-	if ( h < 10 ) then
-		pretty = pretty .. "0";
-	end
-	pretty = pretty .. h .. "h ";
-	
-	if ( m < 10 ) then
-		pretty = pretty .. "0";
-	end
-	pretty = pretty .. m .. "m ";
-	
-	if ( d >= 2 ) then
-		pretty = d .. "d " .. pretty ;
-	else
-		-- if you don't want to see seconds in the countdown,
-		-- comment out the four following lines
-		if ( s < 10 ) then
-			pretty = pretty .. "0";
-		end
+	if ( d > 0 ) then pretty = d .. "d " .. pretty ; end
+	if ( h > 0 ) then pretty = pretty .. h .. "h "; end
+	if ( m > 0 ) then pretty = pretty .. m .. "m "; end
+
+	if ( d == 0 and h == 0 and m < 5 ) then
 		pretty = pretty .. s .. "s";
-		--
 	end
 
 	return delta_t,pretty
