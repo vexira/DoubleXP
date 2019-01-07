@@ -182,7 +182,7 @@ function DoubleXP_TimeLeft()
 	local date_limit;
 	local time_limit;
 	local delta_t;
-	local h,m,s;
+	local d,hd,h,m,s;
 	local pretty;
 
 	date_limit = deepcopy(DXP_Date);	-- now
@@ -203,9 +203,16 @@ function DoubleXP_TimeLeft()
 
 	delta_t = time_limit - time(DXP_Date);
 
-	h = floor(delta_t/3600);
-	m = floor((delta_t-h*3600)/60);
-	s = delta_t-h*3600-m*60;
+	d = floor(delta_t/3600/24);
+	if ( d >= 2 ) then
+		h = floor((delta_t-d*3600*24)/3600);
+		m = floor((delta_t-d*3600*24-h*3600)/60);
+		s = delta_t-d*3600*24-h*3600-m*60;
+	else
+		h = floor(delta_t/3600);
+		m = floor((delta_t-h*3600)/60);
+		s = delta_t-h*3600-m*60;
+	end
 
 	pretty = "";
 	if ( h < 10 ) then
@@ -218,13 +225,17 @@ function DoubleXP_TimeLeft()
 	end
 	pretty = pretty .. m .. "m ";
 	
-	-- if you don't want to see seconds in the countdown,
-	-- comment out the four following lines
-	if ( s < 10 ) then
-		pretty = pretty .. "0";
+	if ( d >= 2 ) then
+		pretty = d .. "d " .. pretty ;
+	else
+		-- if you don't want to see seconds in the countdown,
+		-- comment out the four following lines
+		if ( s < 10 ) then
+			pretty = pretty .. "0";
+		end
+		pretty = pretty .. s .. "s";
+		--
 	end
-	pretty = pretty .. s .. "s";
-	--
 
 	return delta_t,pretty
 end
