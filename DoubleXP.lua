@@ -12,10 +12,12 @@
 SLASH_DXP1 = "/dxp";
 SLASH_DXP2 = "/doublexp";
 
+DXP_Offset = 0;
+
 local DXP_TITLE = "DoubleXP";
 local DXP_VERSION = "version " .. GetAddOnMetadata(..., "Version"):match("^([%d.]+)") .. " (" .. GetAddOnMetadata(..., "X-Date") ..")";
 
-local DXP_Date = date("*t");
+local DXP_Date = date("*t", time() - DXP_Offset * 3600);
 local DXP_ON = false;
 local DXP_PS = false;			-- previous state
 local DXP_PlayerHide = false;		-- player did hide the frame
@@ -30,13 +32,16 @@ local DXP_Help_Text = "|cff00afc6<Ctrl Left Click>|r to hide frame\n|cff00afc6<A
 -- The OnEvent function handles the SavedVariables states
 -- Second event doesn't seem to work though (hence the empty
 -- case).
-function DoubleXP_OnEvent(self, event, arg1)
-	if ( event == "ADDON_LOADED" and arg1 == "DoubleXP" ) then
+function DoubleXP_OnEvent(self, event, arg)
+	if ( event == "ADDON_LOADED" and arg == "DoubleXP" ) then
 		if ( DXP_Visible == nil or DXP_Visible == true ) then
 			-- If we are here for the first time or if
 			-- the player wanted the frame shown last time,
 			-- then show the frame.
 			DXP_Visible = true;
+		end
+		if ( DXP_Offset == nil ) then
+			DXP_Offset = 0;
 		end
 	elseif ( event == "PLAYER_LOGOUT" ) then
 	end
@@ -45,7 +50,7 @@ end
 
 -- Magic to convert slash command names to functions.
 SlashCmdList["DXP"] = function(msg, editbox)
-	local _, _, cmd = string.find(msg, "%s?(%w+)%s?.*")
+	local _, _, cmd,offset = string.find(msg, "%s?(%w+)%s?([-+]?%d+)%s?.*")
    
 	if ( cmd == "show" ) then
 		DoubleXPFrame:Show()
@@ -57,11 +62,18 @@ SlashCmdList["DXP"] = function(msg, editbox)
 		DXP_Visible = false;
 	elseif (cmd == nil ) then
 		ChatLog(DXP_Msg);
+	elseif ( cmd == "offset" ) then
+		offset = tonumber(offset);	-- do I need that or is it a number already? I hate dynamic typing.
+		if ( offset ~= nil ) then
+			DXP_Offset = round(offset);
+		end
+		ChatLog(DXP_TITLE .. " offset set to " .. DXP_Offset .. " hours") ;
 	else
 		ChatLog("");
 		ChatLog(DXP_TITLE .. " " .. DXP_VERSION);
 		ChatLog(" /doublexp [show|hide]: show/hide frame");
 		ChatLog(" /doublexp: report remaining time in chat frame");
+		ChatLog(" /doublexp offset <value>: adjust your timezone offset (relative to server time)");
 		ChatLog("");
 		ChatLog(DXP_Help_Text);
 	end
@@ -71,12 +83,16 @@ end
 -- This function is run once when the character logs in
 -- (or when '/reload ui' is used).
 function DoubleXP_OnLoad(self)
+	local h, m;
+
 	self:RegisterEvent("ADDON_LOADED");
 	self:RegisterEvent("PLAYER_LOGOUT");
 
-	DXP_Date = date("*t");
+	DXP_Date = date("*t", time() - DXP_Offset * 3600);
+	h,m = GetGameTime();
 	ChatLog(DXP_TITLE .. " " .. DXP_VERSION);
-	ChatLog(DXP_Msg);
+	--ChatLog(DXP_Msg);
+	ChatLog("Server time is " .. h .. ":" .. m .. ". Please adjust offset if needed.") ;
 
 	DoubleXPFrame.title = DoubleXPFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal");
 
@@ -96,7 +112,7 @@ function DoubleXP_OnUpdate(self)
 	local theText = "";
 	local dt, pp;
 
-	DXP_Date = date("*t");
+	DXP_Date = date("*t", time() - DXP_Offset * 3600);
 
 	if ( DXP_Date.wday == 7 or DXP_Date.wday == 1 ) then
 		DXP_ON = true;
@@ -187,8 +203,8 @@ function DoubleXP_TimeLeft()
 
 	date_limit = deepcopy(DXP_Date);	-- now
 	date_limit.hour = 23;			-- end ...
-	date_limit.min = 59;			-- ... of current ...
-	date_limit.sec = 59;			-- ... day
+	date_limit.min  = 59;			-- ... of current ...
+	date_limit.sec  = 59;			-- ... day
 
 	if ( DXP_ON ) then
 		if ( date_limit.wday == 1 ) then
@@ -266,3 +282,10 @@ function deepcopy(orig)
     end
     return copy
 end
+
+
+-- Round a number (positive or negative)
+function round(x)
+  return x>=0 and math.floor(x+0.5) or math.ceil(x-0.5)
+end
+

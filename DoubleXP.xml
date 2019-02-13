@@ -64,7 +64,7 @@
 				DoubleXP_OnLeave();
 			</OnLeave>
 			<OnEvent>
-				DoubleXP_OnEvent(self, event, arg1);
+				DoubleXP_OnEvent(self, event, arg);
 			</OnEvent>
 		</Scripts>
 	</Frame>
