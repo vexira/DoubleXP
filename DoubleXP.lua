@@ -158,7 +158,7 @@ end
 -- What happens when the mouse cursor enters the frame?
 -- We show the tooltip!
 function DoubleXP_OnEnter(obj)
-	obj.tooltipText = DXP_Help_Text;
+	obj.tooltipText = DXP_Help_Text .. "\nTime offset: " .. DXP_Offset .. "h";
 
 	GameTooltip:SetOwner(obj,"ANCHOR_RIGHT");
 	GameTooltip:SetText(obj.tooltipText, nil, nil, nil, nil, false);
