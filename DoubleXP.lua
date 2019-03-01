@@ -109,21 +109,20 @@ end
 -- It is responsible for updating the current date variable, the
 -- content of the frame and the default message.
 function DoubleXP_OnUpdate(self)
-	local theText = "";
+	local theText;
 	local dt, pp;
 
 	DXP_Date = date("*t", time() - DXP_Offset * 3600);
 
-	if ( DXP_Date.wday == 7 or DXP_Date.wday == 1 ) then
-		DXP_ON = true;
-	else
+	if ( DXP_Date.wday ~= 7 and DXP_Date.wday ~= 1 ) then
 		DXP_ON = false;
+	else
+		DXP_ON = true;
 	end
 
 	dt, pp = DoubleXP_TimeLeft();
 
-	theText = "is " .. DoubleXP_Report();
-	theText = theText .. "\n\n" .. pp .. " to go"
+	theText = "is " .. DoubleXP_Report() .. "\n\n" .. pp .. " to go";
 
 	DXP_Msg = "Double XP Weekend is " .. DoubleXP_Report() .. " (" .. pp;
 	if ( DXP_ON ) then
