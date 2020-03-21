@@ -1,5 +1,9 @@
 # DoubleXP
 
+**NOTE: 
+Starting with patch 2.6.0 WoW Mania has it's own in-game double XP week-end notification system. This addon is not needed anymore!**
+
+
 This is and addon for WoW 3.3.5 (WOTLK) on woW-Mania private server.
 
 Its purpose is to give time before the next double XP Weekend, or time left before the double XP Weekend ends.
